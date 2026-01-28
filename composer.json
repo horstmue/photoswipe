@@ -1,5 +1,5 @@
 {
-  "name": "tei/photoswipe",
+  "name": "horstmue/photoswipe",
   "type": "typo3-cms-extension",
   "description": "TYPO3 PhotoSwipe-Plugin for native image-enlargement",
   "license": "GPL-2.0-or-later",
