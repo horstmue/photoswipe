@@ -82,4 +82,6 @@ ChangeLog
 =====
 - emonf for TER, bugfix in constants, settings-check for file-extensions
 
-
+1.2.4
+=====
+- Caption support
