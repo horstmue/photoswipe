@@ -2,6 +2,7 @@
 PhotoSwipe
 ==========
 
+
 What does it do?
 ================
 Adds the photoswipe.com JavaScript plugin (version 4.1.3) as default for image enlargement.
