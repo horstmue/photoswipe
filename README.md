@@ -69,3 +69,4 @@ add arrows in the zoom-view.
 ## Layer
 After installing photoswipe, TYPO3 will offer you a new link-type "Layer". You can choose between pages (iFrame) and 
  content elements (innerHTML). 
+

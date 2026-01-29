@@ -1,8 +1,8 @@
 <?php
 defined('TYPO3') || die();
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Page\AssetCollector;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 (function () {
