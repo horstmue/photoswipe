@@ -29,3 +29,14 @@ plugin.tx_photoswipe{
         svgWidth = {$plugin.tx_photoswipe.settings.svgWidth}
     }
 }
+
+page {
+    includeJSFooter {
+        photoswipe = EXT:photoswipe/Resources/Public/JavaScript/photoswipe-init.js
+        photoswipe.type = module
+    }
+    includeCSS {
+        photoswipe = EXT:photoswipe/Resources/Public/Css/photoswipe.css
+        photoswipe-caption = EXT:photoswipe/Resources/Public/Css/photoswipe-dynamic-caption-plugin.css
+    }
+}
