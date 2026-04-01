@@ -16,5 +16,5 @@ $EM_CONF[$_EXTKEY] = [
         'suggests' => [],
     ],
     'state' => 'stable',
-    'version' => '2.0.10',
+    'version' => '3.0.0',
 ];
