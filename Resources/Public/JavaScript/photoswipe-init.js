@@ -21,7 +21,7 @@ linkHandlerLightbox.addFilter('itemData', (itemData, index) => {
     return itemData;
 });
 linkHandlerLightbox.on('contentLoad', (e) => {
-    const { content } = e;
+    const {content} = e;
     if (content.type === 'iframe') {
         e.preventDefault();
         content.element = document.createElement('div');
