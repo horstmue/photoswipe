@@ -80,6 +80,7 @@ imageLightbox.init();
  * Base 64 image preview and lazy load
  */
 document.addEventListener('DOMContentLoaded', function () {
+    // console.log('Initializing PS loading');
     let lazyImages = [].slice.call(document.querySelectorAll('img.lazy64'));
     let lazyBgImages = [].slice.call(document.querySelectorAll('.lazy64bg'));
 
