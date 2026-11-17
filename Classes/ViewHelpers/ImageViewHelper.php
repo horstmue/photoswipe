@@ -49,7 +49,6 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
     public function initializeArguments(): void
     {
         parent::initializeArguments();
-        $this->registerUniversalTagAttributes();
         $this->registerTagAttribute('alt', 'string', 'Specifies an alternate text for an image', false);
         $this->registerTagAttribute('ismap', 'string', 'Specifies an image as a server-side image-map. Rarely used. Look at usemap instead', false);
         $this->registerTagAttribute('longdesc', 'string', 'Specifies the URL to a document that contains a long description of an image', false);
@@ -82,7 +81,7 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
      * @throws Exception
      * @return string Rendered tag
      */
-    public function render()
+    public function render(): string
     {
         $src = (string)$this->arguments['src'];
         if (($src === '' && $this->arguments['image'] === null) || ($src !== '' && $this->arguments['image'] !== null)) {
@@ -132,7 +131,7 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
                 if (isset($this->arguments['lazy64']) && $this->arguments['lazy64'] === 1) {
                     $this->tag->addAttribute('src', $this->imageService64->getBase64Preview($processedImage));
                     $this->tag->addAttribute('data-src', $imageUri);
-                    $cssClass = $this->arguments['class'] ? 'lazy64 ' . $this->arguments['class'] : 'lazy64';
+                    $cssClass = trim('lazy64 ' . ($this->additionalArguments['class'] ?? ''));
                     $this->tag->addAttribute('class', $cssClass);
                 } else {
                     $this->tag->addAttribute('src', $imageUri);
@@ -145,7 +144,7 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
                     $this->tag->addAttribute('alt', $image->hasProperty('alternative') ? $image->getProperty('alternative') : '');
                 }
                 $title = $image->hasProperty('title') ? $image->getProperty('title') : '';
-                if (empty($this->arguments['title']) && $title !== '') {
+                if (empty($this->additionalArguments['title']) && $title !== '') {
                     $this->tag->addAttribute('title', $title);
                 }
             } catch (ResourceDoesNotExistException $e) {

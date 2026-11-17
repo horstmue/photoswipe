@@ -61,11 +61,17 @@ final class MediaViewHelper extends AbstractTagBasedViewHelper
      * @var string
      */
     protected $tagName = 'img';
+    /**
+     * Constructor
+     */
+    public function __construct(private readonly RendererRegistry $rendererRegistry, private readonly ImageService $imageService)
+    {
+        parent::__construct();
+    }
 
     public function initializeArguments(): void
     {
         parent::initializeArguments();
-        $this->registerUniversalTagAttributes();
         $this->registerTagAttribute('alt', 'string', 'Specifies an alternate text for an image', false);
         $this->registerArgument('file', 'object', 'File', true);
         $this->registerArgument('additionalConfig', 'array', 'This array can hold additional configuration that is passed though to the Renderer object', false, []);
@@ -109,7 +115,7 @@ final class MediaViewHelper extends AbstractTagBasedViewHelper
             );
         }
 
-        $fileRenderer = GeneralUtility::makeInstance(RendererRegistry::class)->getRenderer($file);
+        $fileRenderer = $this->rendererRegistry->getRenderer($file);
 
         // Fallback to image when no renderer is found
         if ($fileRenderer === null) {
@@ -161,7 +167,7 @@ final class MediaViewHelper extends AbstractTagBasedViewHelper
         if (isset($this->arguments['lazy64']) && $this->arguments['lazy64'] === 1) {
             $this->tag->addAttribute('src', $this->getImageService64()->getBase64Preview($processedImage));
             $this->tag->addAttribute('data-src', $imageUri);
-            $cssClass = $this->arguments['class'] ? 'lazy64 ' . $this->arguments['class'] : 'lazy64';
+            $cssClass = trim('lazy64 ' . ($this->additionalArguments['class'] ?? ''));
             $this->tag->addAttribute('class', $cssClass);
         } else {
             $this->tag->addAttribute('src', $imageUri);
@@ -184,7 +190,7 @@ final class MediaViewHelper extends AbstractTagBasedViewHelper
         if (empty($this->arguments['alt'])) {
             $this->tag->addAttribute('alt', $alt);
         }
-        if (empty($this->arguments['title']) && !empty($title)) {
+        if (empty($this->additionalArguments['title']) && !empty($title)) {
             $this->tag->addAttribute('title', $title);
         }
 
@@ -193,7 +199,7 @@ final class MediaViewHelper extends AbstractTagBasedViewHelper
 
     protected function getImageService(): ImageService
     {
-        return GeneralUtility::makeInstance(ImageService::class);
+        return $this->imageService;
     }
     protected function getImageService64(): ImageService64
     {

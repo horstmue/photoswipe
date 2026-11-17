@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tei\PhotoSwipe\Backend\EventListener;
 
+use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Backend\Form\Event\ModifyLinkExplanationEvent;
-use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 
 final readonly class LinkEventListener
@@ -23,7 +23,7 @@ final readonly class LinkEventListener
                 $event->setLinkExplanation([
                     'icon' => $this->iconFactory->getIcon(
                         'tx-photoswipe-content',
-                        Icon::SIZE_SMALL
+                        IconSize::SMALL
                     )->render(),
                     'text' => sprintf('PhotoSwipe Lightbox - Content (%s)', $event->getLinkParts()['url']),
                 ]);
@@ -31,7 +31,7 @@ final readonly class LinkEventListener
                 $event->setLinkExplanation([
                     'icon' => $this->iconFactory->getIcon(
                         'tx-photoswipe-page',
-                        Icon::SIZE_SMALL
+                        IconSize::SMALL
                     )->render(),
                     'text' => sprintf('PhotoSwipe Lightbox - Page (%s)', $event->getLinkParts()['url']),
                 ]);

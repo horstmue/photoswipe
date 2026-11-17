@@ -15,8 +15,7 @@ $ttContentColumns = [
             'renderType' => 'checkboxToggle',
             'items' => [
                 [
-                    'label' => 'ImageLazy', // Hier kann optional ein Text stehen, der neben der Checkbox erscheint
-                    'value' => '1', // Der Wert, der in der DB gespeichert wird, wenn aktiv
+                    'label' => 'ImageLazy',
                 ],
             ],
             'default' => 0,

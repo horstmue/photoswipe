@@ -47,8 +47,7 @@ class Base64ImageViewHelper extends AbstractTagBasedViewHelper
     public function initializeArguments(): void
     {
         parent::initializeArguments();
-        $this->registerUniversalTagAttributes();
-        $this->registerArgument('url', 'string', 'a path to the image', true, '');
+        $this->registerArgument('url', 'string', 'a path to the image', true);
     }
 
 
@@ -60,7 +59,7 @@ class Base64ImageViewHelper extends AbstractTagBasedViewHelper
      * @throws Exception
      * @return string Rendered tag
      */
-    public function render()
+    public function render(): string
     {
         $image = $this->imageService->getImage($this->arguments['url'], null, false);
         return $this->imageService64->getBase64Preview($this->imageService->applyProcessingInstructions($image, []));
