@@ -52,7 +52,7 @@ final readonly class ATagParams
         $crop = $file instanceof FileReference ? ($file->getReferenceProperties()['crop'] ?? null) : null;
         $cropArea = $crop ? CropVariantCollection::create((string)$crop)->getCropArea('default') : null;
 
-        $properties = ($cropArea !== null && !$cropArea->isEmpty())
+        $properties = ($cropArea instanceof Area && !$cropArea->isEmpty())
             ? $this->getCroppedFileProperties($file, $cropArea)
             : $file->getProperties();
 
