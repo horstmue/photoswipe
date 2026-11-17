@@ -1,0 +1,18 @@
+# Override the fluid_styled_content image partials (index 5: above FSC = 0, below site packages = 10)
+lib.contentElement.partialRootPaths.5 = EXT:photoswipe/Resources/Private/Partials/FluidStyledContent/
+
+# Add the PhotoSwipe dimensions to the click-enlarge link
+lib.contentElement.settings.media.popup.linkParams.ATagParams.cObject = USER
+lib.contentElement.settings.media.popup.linkParams.ATagParams.cObject.userFunc = Tei\PhotoSwipe\Service\ATagParams->set
+
+page {
+    includeJSFooter {
+        photoswipe = EXT:photoswipe/Resources/Public/JavaScript/photoswipe-init.js
+        photoswipe.type = module
+    }
+
+    includeCSS {
+        photoswipe = EXT:photoswipe/Resources/Public/Css/photoswipe.css
+        photoswipe-caption = EXT:photoswipe/Resources/Public/Css/photoswipe-dynamic-caption-plugin.css
+    }
+}

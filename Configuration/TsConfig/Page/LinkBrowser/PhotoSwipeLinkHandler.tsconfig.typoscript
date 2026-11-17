@@ -1,6 +1,0 @@
-TCEMAIN.linkHandler {
-    photoswipe {
-        handler = Tei\PhotoSwipe\LinkHandler\PhotoSwipeLinkHandler
-        label = Layer
-    }
-}

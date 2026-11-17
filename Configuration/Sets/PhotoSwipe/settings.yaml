@@ -1,0 +1,6 @@
+# PhotoSwipe takes over the fluid_styled_content click-enlarge link
+styles:
+  content:
+    textmedia:
+      linkWrap:
+        lightboxEnabled: true

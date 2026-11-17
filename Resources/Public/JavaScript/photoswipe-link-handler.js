@@ -1,39 +1,35 @@
 /*
- * This file is part of the TYPO3 CMS project.
- *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
- */
-import LinkBrowser from "@typo3/backend/link-browser.js";
-import RegularEvent from "@typo3/core/event/regular-event.js";
-
-/**
  * Module: @tei/photoswipe/photoswipe-link-handler.js
- * photoswipe link
+ *
+ * LinkBrowser tab "Layer": same UI as the core page tab (@typo3/backend/page-link-handler.js),
+ * but finalizes the link as t3://photoswipe?uid=… (optionally #c<uid> for a single content element).
  */
-class PhotoSwipeLinkHandler {
-    constructor() {
-        this.linkPageByTextfield = () => {
-            let e = document.getElementById("luid").value;
-            if (!e) return;
-            const t = parseInt(e, 10);
-            e = "t3://photoswipe?uid=" + t;
-            LinkBrowser.finalizeFunction(e);
-        }
+import LinkBrowser from '@typo3/backend/link-browser.js';
+import RegularEvent from '@typo3/core/event/regular-event.js';
 
-        new RegularEvent("click", ((e, t) => {
-            e.preventDefault();
-            LinkBrowser.finalizeFunction(
-                t.getAttribute("href").replace("page", "photoswipe")
-            );
-        })).delegateTo(document, "a.t3js-pageLink");
+class PhotoSwipeLinkHandler {
+  constructor() {
+    new RegularEvent('click', (event, target) => {
+      event.preventDefault();
+      LinkBrowser.finalizeFunction(target.getAttribute('href').replace('t3://page', 't3://photoswipe'));
+    }).delegateTo(document, 'a.t3js-pageLink');
+
+    new RegularEvent('click', (event) => {
+      event.preventDefault();
+      this.linkPageByTextfield();
+    }).delegateTo(document, 'input.t3js-pageLink');
+  }
+
+  linkPageByTextfield() {
+    const value = document.getElementById('luid')?.value;
+    if (!value) {
+      return;
     }
+    const uid = parseInt(value, 10);
+    if (!isNaN(uid)) {
+      LinkBrowser.finalizeFunction('t3://photoswipe?uid=' + uid);
+    }
+  }
 }
 
-export default new PhotoSwipeLinkHandler;
+export default new PhotoSwipeLinkHandler();

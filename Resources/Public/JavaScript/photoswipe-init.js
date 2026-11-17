@@ -37,7 +37,6 @@ linkHandlerLightbox.on('contentLoad', (e) => {
         content.element = document.createElement('div');
         content.element.className = 'pswp__html-container';
 
-        console.log([content.data.element.dataset.html]);
 
         const html = document.createElement('div');
         html.setAttribute('class', 'wrapper');
@@ -80,7 +79,6 @@ imageLightbox.init();
  * Base 64 image preview and lazy load
  */
 document.addEventListener('DOMContentLoaded', function () {
-    // console.log('Initializing PS loading');
     let lazyImages = [].slice.call(document.querySelectorAll('img.lazy64'));
     let lazyBgImages = [].slice.call(document.querySelectorAll('.lazy64bg'));
 

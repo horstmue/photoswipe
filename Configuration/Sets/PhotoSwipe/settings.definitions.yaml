@@ -1,0 +1,15 @@
+categories:
+  photoswipe:
+    label: PhotoSwipe
+
+settings:
+  photoswipe.imageExtensions:
+    label: 'Image extensions for the Base64 lazy-loading preview (comma separated)'
+    type: string
+    default: 'jpg,jpeg,png,bmp'
+    category: photoswipe
+  photoswipe.svgWidth:
+    label: 'Width of the Base64 lazy-loading preview in px'
+    type: int
+    default: 10
+    category: photoswipe

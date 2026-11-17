@@ -31,20 +31,25 @@ The content of this document is related to TYPO3, a GNU/GPL CMS/Framework availa
 
 ## Administration
 
+### Requirements
+TYPO3 v14.3+, PHP 8.3+, `typo3/cms-fluid-styled-content`
+
 ### Installation
-
-#### via ExtensionManager
-1. Go to the Extension Manager and install the extension
-2. Include the static template "PhotoSwipe (photoswipe)"
-3. Configure extension if required (see section below)
-
-#### via Composer
-1. install the extension via composer: composer require tei/photoswipe
-2. Include the static template "PhotoSwipe (photoswipe)"
-3. Configure extension if required (see section below)
+1. `composer require horstmue/photoswipe`
+2. Add the site set **PhotoSwipe** (`horstmue/photoswipe`) as dependency of your site
+   (`config/sites/<site>/config.yaml` → `dependencies`, or the site set of your site package).
+   It depends on `typo3/fluid-styled-content` and enables the click-enlarge lightbox.
 
 ## Configuration
-You can overwrite all files in the Constant Editor. 
+Site settings (category "PhotoSwipe"):
+
+| Setting                     | Default            | Description                                         |
+|-----------------------------|--------------------|-----------------------------------------------------|
+| `photoswipe.imageExtensions`| `jpg,jpeg,png,bmp` | Image extensions for the Base64 lazy-loading preview |
+| `photoswipe.svgWidth`       | `10`               | Width of the Base64 lazy-loading preview in px       |
+
+The set overrides the fluid_styled_content partials `Media/Type/Image` and `Media/Rendering/Image`
+(`lib.contentElement.partialRootPaths.5`). Site packages can override them again with a higher index.
 
 #### Photoswipe in your HTML:
 The default setting for initializing photoswipe is by TYPO3's default css-class "ce-gallery". 

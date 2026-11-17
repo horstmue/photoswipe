@@ -6,14 +6,8 @@ services:
 
   Tei\PhotoSwipe\:
     resource: '../Classes/*'
-    exclude: '../Classes/Domain/Model/*'
-    
+
+  # Backend link handlers are instantiated via GeneralUtility::makeInstance() per request
   Tei\PhotoSwipe\LinkHandler\PhotoSwipeLinkHandler:
     shared: false
     public: true
-
-  Tei\PhotoSwipe\Backend\EventListener\LinkEventListener:
-    tags:
-      - name: event.listener
-        identifier: 'photoswipe/backend/modify-link-explanation'
-
