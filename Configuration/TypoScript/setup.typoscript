@@ -9,7 +9,7 @@ lib.contentElement {
 
 # add data-size attr to image-link
 # ======================================================================================================================
-lib.contentElement.settings.media.popup.linkParams{
+lib.contentElement.settings.media.popup.linkParams {
     ATagParams.cObject = USER
     ATagParams.cObject {
         userFunc = Tei\PhotoSwipe\Service\ATagParams->set
@@ -19,7 +19,7 @@ lib.contentElement.settings.media.popup.linkParams{
 
 # constants
 # ======================================================================================================================
-plugin.tx_photoswipe{
+plugin.tx_photoswipe {
     view {
         layoutRootPath = {$plugin.tx_photoswipe.view.layoutRootPath}
         templateRootPath = {$plugin.tx_photoswipe.view.templateRootPath}

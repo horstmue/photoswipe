@@ -12,7 +12,7 @@ plugin.tx_photoswipe {
         # cat=plugin.tx_photoswipe/config; type=string; label=PhotoSwipe allowed image extensions (comma separated)
         imageExtensions = jpg,jpeg,png,bmp
         # cat=plugin.tx_photoswipe/config; type=int[1-500]; label=Svg width in px
-        svgWidth= 10
+        svgWidth = 10
     }
 
 }
