@@ -3,12 +3,6 @@
 namespace Tei\PhotoSwipe\ViewHelpers;
 
 use Tei\PhotoSwipe\Service\ImageService64;
-use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
-use TYPO3\CMS\Core\Resource\Exception\ResourceDoesNotExistException;
-use TYPO3\CMS\Core\Resource\ProcessedFile;
-use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
@@ -31,7 +25,7 @@ class Base64ImageViewHelper extends AbstractTagBasedViewHelper
     /**
      * @param ImageService $imageService
      */
-    public function injectImageService(ImageService $imageService)
+    public function injectImageService(ImageService $imageService): void
     {
         $this->imageService = $imageService;
     }
@@ -41,7 +35,7 @@ class Base64ImageViewHelper extends AbstractTagBasedViewHelper
      * @param ImageService64 $imageService64
      * @return void
      */
-    public function injectImageService64(ImageService64 $imageService64)
+    public function injectImageService64(ImageService64 $imageService64): void
     {
         $this->imageService64 = $imageService64;
     }
@@ -50,7 +44,7 @@ class Base64ImageViewHelper extends AbstractTagBasedViewHelper
     /**
      * Initialize arguments.
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerUniversalTagAttributes();

@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
 defined('TYPO3') || die();
 
 $ttContentColumns = [
@@ -20,5 +24,5 @@ $ttContentColumns = [
     ],
 ];
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('tt_content', $ttContentColumns);
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette('tt_content', 'imagelinks', 'imagelazy64');
+ExtensionManagementUtility::addTCAcolumns('tt_content', $ttContentColumns);
+ExtensionManagementUtility::addFieldsToPalette('tt_content', 'imagelinks', 'imagelazy64');

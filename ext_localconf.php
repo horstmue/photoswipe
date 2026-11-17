@@ -1,11 +1,14 @@
 <?php
+use Tei\PhotoSwipe\LinkHandler\PhotoSwipeLinkBuilder;
+use Tei\PhotoSwipe\LinkHandler\PhotoSwipeLinkHandling;
+
 defined('TYPO3') || die();
 
-(function () {
+(function (): void {
 
     $GLOBALS['TYPO3_CONF_VARS']['FE']['typolinkBuilder']['photoswipe'] =
-        \Tei\PhotoSwipe\LinkHandler\PhotoSwipeLinkBuilder::class;
+        PhotoSwipeLinkBuilder::class;
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['linkHandler']['photoswipe'] =
-        \Tei\PhotoSwipe\LinkHandler\PhotoSwipeLinkHandling::class;
+        PhotoSwipeLinkHandling::class;
 
 })();

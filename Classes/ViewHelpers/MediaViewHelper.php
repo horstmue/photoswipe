@@ -98,7 +98,7 @@ final class MediaViewHelper extends AbstractTagBasedViewHelper
         }
 
         if (!$file instanceof FileInterface) {
-            throw new \UnexpectedValueException('Supplied file object type ' . get_class($file) . ' must be FileInterface.', 1454252193);
+            throw new \UnexpectedValueException('Supplied file object type ' . $file::class . ' must be FileInterface.', 1454252193);
         }
 
         if ((string)($this->arguments['fileExtension'] ?? '') && !GeneralUtility::inList($GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'], (string)$this->arguments['fileExtension'])) {

@@ -8,10 +8,10 @@ use TYPO3\CMS\Backend\Form\Event\ModifyLinkExplanationEvent;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 
-final class LinkEventListener
+final readonly class LinkEventListener
 {
     public function __construct(
-        private readonly IconFactory $iconFactory
+        private IconFactory $iconFactory
     )
     {
     }

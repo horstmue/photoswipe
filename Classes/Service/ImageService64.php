@@ -6,8 +6,6 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Resource\ProcessedFile;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Configuration\FrontendConfigurationManager;
 use TYPO3\CMS\Extbase\Service\ImageService;
 
@@ -78,7 +76,7 @@ class ImageService64
         return GeneralUtility::makeInstance(ImageService::class);
     }
 
-    protected function getFrontendConfigurationManager()
+    protected function getFrontendConfigurationManager(): object
     {
         return GeneralUtility::makeInstance(FrontendConfigurationManager::class);
     }
