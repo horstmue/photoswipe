@@ -13,7 +13,7 @@ use TYPO3\CMS\Extbase\Service\ImageService;
  */
 final readonly class ImageService64
 {
-    private const string NOT_SUPPORTED = 'data:image/file-extensions-not-supported;';
+    private const NOT_SUPPORTED = 'data:image/file-extensions-not-supported;';
 
     public function __construct(
         private ImageService $imageService,

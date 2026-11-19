@@ -32,7 +32,7 @@ The content of this document is related to TYPO3, a GNU/GPL CMS/Framework availa
 ## Administration
 
 ### Requirements
-TYPO3 v14.3+, PHP 8.3+, `typo3/cms-fluid-styled-content`
+TYPO3 v14.3+, PHP 8.2+, `typo3/cms-fluid-styled-content`
 
 ### Installation
 1. `composer require horstmue/photoswipe`

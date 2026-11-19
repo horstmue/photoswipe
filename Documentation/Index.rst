@@ -9,7 +9,7 @@ Adds the `PhotoSwipe 5 <https://photoswipe.com>`__ lightbox to TYPO3's native
 Requirements
 ============
 
-TYPO3 v14.3+, PHP 8.3+, typo3/cms-fluid-styled-content
+TYPO3 v14.3+, PHP 8.2+, typo3/cms-fluid-styled-content
 
 Installation
 ============
