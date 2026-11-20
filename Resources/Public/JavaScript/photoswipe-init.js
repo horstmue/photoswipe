@@ -1,79 +1,108 @@
-import PhotoSwipeLightbox from './photoswipe-lightbox.esm.js';
-
-import PhotoSwipeDynamicCaption from './photoswipe-dynamic-caption-plugin.esm.js';
+/**
+ * The lightbox modules are only loaded on pages that have lightbox links, and only after the page has loaded:
+ * no static imports, so they do not lengthen the critical request chain.
+ */
+const pswpModule = () => import('./photoswipe.esm.js');
 
 /**
  * lightbox for linkWizard
- * @type {PhotoSwipeLightbox}
  */
-const linkHandlerLightbox = new PhotoSwipeLightbox({
-    gallery: 'body',
-    mainClass: 'pswp--layer-wrapper',
-    children: '[data-ispsw-layer]',
-    pswpModule: () => import('./photoswipe.esm.js')
-    // arrowKeys: false
-});
-linkHandlerLightbox.addFilter('itemData', (itemData, index) => {
-    const iframeUrl = itemData.element.dataset.iframeUrl;
-    if (iframeUrl) {
-        itemData.iframeUrl = iframeUrl;
-    }
-    return itemData;
-});
-linkHandlerLightbox.on('contentLoad', (e) => {
-    const {content} = e;
-    if (content.type === 'iframe') {
-        e.preventDefault();
-        content.element = document.createElement('div');
-        content.element.className = 'pswp__iframe-container';
+function initLinkHandlerLightbox(PhotoSwipeLightbox) {
+    const linkHandlerLightbox = new PhotoSwipeLightbox({
+        gallery: 'body',
+        mainClass: 'pswp--layer-wrapper',
+        children: '[data-ispsw-layer]',
+        pswpModule
+        // arrowKeys: false
+    });
+    linkHandlerLightbox.addFilter('itemData', (itemData, index) => {
+        const iframeUrl = itemData.element.dataset.iframeUrl;
+        if (iframeUrl) {
+            itemData.iframeUrl = iframeUrl;
+        }
+        return itemData;
+    });
+    linkHandlerLightbox.on('contentLoad', (e) => {
+        const {content} = e;
+        if (content.type === 'iframe') {
+            e.preventDefault();
+            content.element = document.createElement('div');
+            content.element.className = 'pswp__iframe-container';
 
-        const iframe = document.createElement('iframe');
-        iframe.setAttribute('allowfullscreen', '');
-        iframe.src = content.data.iframeUrl;
-        content.element.appendChild(iframe);
-    }
-    if (content.type === 'html') {
-        e.preventDefault();
-        content.element = document.createElement('div');
-        content.element.className = 'pswp__html-container';
+            const iframe = document.createElement('iframe');
+            iframe.setAttribute('allowfullscreen', '');
+            iframe.src = content.data.iframeUrl;
+            content.element.appendChild(iframe);
+        }
+        if (content.type === 'html') {
+            e.preventDefault();
+            content.element = document.createElement('div');
+            content.element.className = 'pswp__html-container';
 
 
-        const html = document.createElement('div');
-        html.setAttribute('class', 'wrapper');
-        html.innerHTML = decodeURIComponent(content.data.element.dataset.html);
-        content.element.appendChild(html);
-    }
-});
-linkHandlerLightbox.init();
+            const html = document.createElement('div');
+            html.setAttribute('class', 'wrapper');
+            html.innerHTML = decodeURIComponent(content.data.element.dataset.html);
+            content.element.appendChild(html);
+        }
+    });
+    linkHandlerLightbox.init();
+}
 
 /**
  * lightbox for click-enlarge content elements
- * @type {PhotoSwipeLightbox}
  */
-const imageLightbox = new PhotoSwipeLightbox({
-    gallery: '.ce-gallery',
-    children: '[data-ispsw-img]',
-    pswpModule: () => import('./photoswipe.esm.js')
-});
-const captionPlugin = new PhotoSwipeDynamicCaption(imageLightbox, {
-    type: 'auto',
-    captionContent: (slide) => {
-        let captionTitle = '';
-        let titleTxt = '';
-        let altTxt = '';
-        try {
-            titleTxt = slide.data.element.querySelector('img').getAttribute('title');
-            altTxt = slide.data.element.querySelector('img').getAttribute('alt')
-        } catch (e) {
-            // fallback do nothing for now if no img tag (e.g. inline svg).
+function initImageLightbox(PhotoSwipeLightbox, PhotoSwipeDynamicCaption) {
+    const imageLightbox = new PhotoSwipeLightbox({
+        gallery: '.ce-gallery',
+        children: '[data-ispsw-img]',
+        pswpModule
+    });
+    const captionPlugin = new PhotoSwipeDynamicCaption(imageLightbox, {
+        type: 'auto',
+        captionContent: (slide) => {
+            let captionTitle = '';
+            let titleTxt = '';
+            let altTxt = '';
+            try {
+                titleTxt = slide.data.element.querySelector('img').getAttribute('title');
+                altTxt = slide.data.element.querySelector('img').getAttribute('alt')
+            } catch (e) {
+                // fallback do nothing for now if no img tag (e.g. inline svg).
+            }
+            if (!!titleTxt) {
+                captionTitle = '<strong>' + titleTxt + '</strong><br>';
+            }
+            return captionTitle + altTxt;
         }
-        if (!!titleTxt) {
-            captionTitle = '<strong>' + titleTxt + '</strong><br>';
-        }
-        return captionTitle + altTxt;
+    });
+    imageLightbox.init();
+}
+
+function initLightboxes() {
+    const hasLayerLinks = document.querySelector('[data-ispsw-layer]') !== null;
+    const hasImageLinks = document.querySelector('.ce-gallery [data-ispsw-img]') !== null;
+    if (!hasLayerLinks && !hasImageLinks) {
+        return;
     }
-});
-imageLightbox.init();
+    Promise.all([
+        import('./photoswipe-lightbox.esm.js'),
+        hasImageLinks ? import('./photoswipe-dynamic-caption-plugin.esm.js') : null
+    ]).then(([{default: PhotoSwipeLightbox}, caption]) => {
+        if (hasLayerLinks) {
+            initLinkHandlerLightbox(PhotoSwipeLightbox);
+        }
+        if (hasImageLinks) {
+            initImageLightbox(PhotoSwipeLightbox, caption.default);
+        }
+    });
+}
+
+if (document.readyState === 'complete') {
+    initLightboxes();
+} else {
+    window.addEventListener('load', initLightboxes);
+}
 
 /**
  * Base 64 image preview and lazy load
