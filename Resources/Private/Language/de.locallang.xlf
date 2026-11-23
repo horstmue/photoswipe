@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2020-10-01T12:22:22Z" product-name="photoswipe">
+		<header/>
+		<body>
+			<trans-unit id="btn.close" xml:space="preserve">
+				<source>Close (Esc)</source>
+				<target state="translated">Schließen (Esc)</target>
+			</trans-unit>
+			<trans-unit id="btn.fullscreen" xml:space="preserve">
+				<source>Toggle fullscreen</source>
+				<target state="translated">Vollbild umschalten</target>
+			</trans-unit>
+			<trans-unit id="btn.next" xml:space="preserve">
+				<source>Next (arrow right)</source>
+				<target state="translated">Weiter (Pfeil nach rechts)</target>
+			</trans-unit>
+			<trans-unit id="btn.previous" xml:space="preserve">
+				<source>Previous (arrow left)</source>
+				<target state="translated">Zurück (Pfeil nach links)</target>
+			</trans-unit>
+			<trans-unit id="btn.share" xml:space="preserve">
+				<source>Share</source>
+				<target state="translated">Teilen</target>
+			</trans-unit>
+			<trans-unit id="btn.zoom" xml:space="preserve">
+				<source>Zoom in/out</source>
+				<target state="translated">Vergrößern/Verkleinern</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

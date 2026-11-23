@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tei\PhotoSwipe\ViewHelpers;
 
 use Tei\PhotoSwipe\Service\ImageService64;
-use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Resource\Exception\ResourceDoesNotExistException;
-use TYPO3\CMS\Core\Resource\ProcessedFile;
 use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
@@ -19,36 +19,17 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
     /** @var string */
     protected $tagName = 'img';
 
-    /** @var ImageService */
-    protected $imageService;
-
-    /** @var ImageService64 */
-    protected $imageService64;
-
-
-    /**
-     * @param ImageService $imageService
-     */
-    public function injectImageService(ImageService $imageService)
-    {
-        $this->imageService = $imageService;
+    public function __construct(
+        protected readonly ImageService $imageService,
+        protected readonly ImageService64 $imageService64
+    ) {
+        parent::__construct();
     }
-
-
-    /**
-     * @param ImageService64 $imageService64
-     * @return void
-     */
-    public function injectImageService64(ImageService64 $imageService64)
-    {
-        $this->imageService64 = $imageService64;
-    }
-
 
     /**
      * Initialize arguments.
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerUniversalTagAttributes();
@@ -58,7 +39,7 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
         $this->registerTagAttribute('usemap', 'string', 'Specifies an image as a client-side image-map', false);
         $this->registerTagAttribute('loading', 'string', 'Native lazy-loading for images property. Can be "lazy", "eager" or "auto"', false);
 
-        $this->registerArgument('lazy64', 'string', 'Base64 based lazy-loading  for images property. Can be "0", or "1". Used on image files only.');
+        $this->registerArgument('lazy64', 'string', 'Base64 based lazy-loading for images property. Can be "0", or "1". Used on image files only.');
         $this->registerArgument('src', 'string', 'a path to a file, a combined FAL identifier or an uid (int). If $treatIdAsReference is set, the integer is considered the uid of the sys_file_reference record. If you already got a FAL object, consider using the $image parameter instead', false, '');
         $this->registerArgument('treatIdAsReference', 'bool', 'given src argument is a sys_file_reference record', false, false);
         $this->registerArgument('image', 'object', 'a FAL object');
@@ -75,7 +56,6 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
         $this->registerArgument('absolute', 'bool', 'Force absolute URL', false, false);
     }
 
-
     /**
      * Resizes a given image (if required) and renders the respective img tag
      *
@@ -84,7 +64,7 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
      * @throws Exception
      * @return string Rendered tag
      */
-    public function render()
+    public function render(): string
     {
         $src = (string)$this->arguments['src'];
         if (($src === '' && $this->arguments['image'] === null) || ($src !== '' && $this->arguments['image'] !== null)) {
@@ -123,7 +103,7 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
                     $processingInstructions['fileExtension'] = $this->arguments['fileExtension'];
                 }
                 $processedImage = $this->imageService->applyProcessingInstructions($image, $processingInstructions);
-                $imageUri = $this->imageService->getImageUri($processedImage, $this->arguments['absolute']);
+                $imageUri = $this->imageService->getImageUri($processedImage, (bool)$this->arguments['absolute']);
 
                 if (!$this->tag->hasAttribute('data-focus-area')) {
                     $focusArea = $cropVariantCollection->getFocusArea($cropVariant);
@@ -131,7 +111,7 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
                         $this->tag->addAttribute('data-focus-area', $focusArea->makeAbsoluteBasedOnFile($image));
                     }
                 }
-                if (isset($this->arguments['lazy64']) && $this->arguments['lazy64'] === 1) {
+                if (isset($this->arguments['lazy64']) && ((int)$this->arguments['lazy64'] === 1 || (string)$this->arguments['lazy64'] === '1')) {
                     $this->tag->addAttribute('src', $this->imageService64->getBase64Preview($processedImage));
                     $this->tag->addAttribute('data-src', $imageUri);
                     $cssClass = $this->arguments['class'] ? 'lazy64 ' . $this->arguments['class'] : 'lazy64';
@@ -139,14 +119,14 @@ class ImageViewHelper extends AbstractTagBasedViewHelper
                 } else {
                     $this->tag->addAttribute('src', $imageUri);
                 }
-                $this->tag->addAttribute('width', $processedImage->getProperty('width'));
-                $this->tag->addAttribute('height', $processedImage->getProperty('height'));
+                $this->tag->addAttribute('width', (string)$processedImage->getProperty('width'));
+                $this->tag->addAttribute('height', (string)$processedImage->getProperty('height'));
 
                 // The alt-attribute is mandatory to have valid html-code, therefore add it even if it is empty
                 if (empty($this->arguments['alt'])) {
-                    $this->tag->addAttribute('alt', $image->hasProperty('alternative') ? $image->getProperty('alternative') : '');
+                    $this->tag->addAttribute('alt', $image->hasProperty('alternative') ? (string)$image->getProperty('alternative') : '');
                 }
-                $title = $image->hasProperty('title') ? $image->getProperty('title') : '';
+                $title = $image->hasProperty('title') ? (string)$image->getProperty('title') : '';
                 if (empty($this->arguments['title']) && $title !== '') {
                     $this->tag->addAttribute('title', $title);
                 }

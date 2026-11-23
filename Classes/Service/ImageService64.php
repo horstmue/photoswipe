@@ -1,48 +1,80 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tei\PhotoSwipe\Service;
 
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Resource\ProcessedFile;
-use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Extbase\Configuration\FrontendConfigurationManager;
 use TYPO3\CMS\Extbase\Service\ImageService;
 
 class ImageService64
 {
-    protected array $settings;
+    protected array $settings = [];
+
+    public function __construct(
+        protected readonly ConfigurationManagerInterface $configurationManager,
+        protected readonly ImageService $imageService
+    ) {
+    }
 
     public function getBase64Preview(ProcessedFile $processedImage): string
     {
-        $this->settings = $this->getFrontendConfigurationManager()->getTypoScriptSetup()['plugin.']['tx_photoswipe.']['settings.'];
+        $this->settings = $this->getSettings();
         $imageExtension = strtolower($processedImage->getExtension());
-        $allowedImageExtensions = explode(',', strtolower($this->settings['imageExtensions']));
+        $allowedImageExtensions = GeneralUtility::trimExplode(',', strtolower((string)($this->settings['imageExtensions'] ?? 'jpg,jpeg,png,bmp')), true);
         $svgImage = 'data:image/file-extensions-not-supported;';
 
-        if (in_array($imageExtension, $allowedImageExtensions)) {
+        if (in_array($imageExtension, $allowedImageExtensions, true)) {
             $props = $processedImage->getOriginalFile()->getProperties();
-            $svgHeight = ($props['height'] * $this->settings['svgWidth']) / $props['width'];
+            $svgWidth = (int)($this->settings['svgWidth'] ?? 10);
+            $origWidth = (int)($props['width'] ?? 0);
+            $origHeight = (int)($props['height'] ?? 0);
+            $svgHeight = $origWidth > 0 ? (int)round(($origHeight * $svgWidth) / $origWidth) : $svgWidth;
 
             $processingInstructions = [
-                'width' => $this->settings['svgWidth'],
+                'width' => $svgWidth,
                 'height' => $svgHeight,
             ];
-            $imageService = $this->getImageService();
-            $processedImageSVG = $imageService->applyProcessingInstructions($processedImage, $processingInstructions);
+            $processedImageSVG = $this->imageService->applyProcessingInstructions($processedImage, $processingInstructions);
 
-            $fileLink = Environment::getPublicPath() . $imageService->getImageUri($processedImageSVG);
+            $fileLink = Environment::getPublicPath() . $this->imageService->getImageUri($processedImageSVG);
 
             // remove EXIF and get img-data
-            $tmpFileLink = Environment::getPublicPath() . '/fileadmin/_processed_/ps_tmp.' . $imageExtension;
+            $processedDir = Environment::getPublicPath() . '/fileadmin/_processed_';
+            if (!is_dir($processedDir)) {
+                GeneralUtility::mkdir_deep($processedDir);
+            }
+            $tmpFileLink = $processedDir . '/ps_tmp.' . $imageExtension;
             $this->removeExif($fileLink, $tmpFileLink);
-            $tmpData = file_get_contents($tmpFileLink);
-
-            $svgImage = 'data:image/' . $imageExtension . ';base64,' . base64_encode($tmpData);
+            if (file_exists($tmpFileLink)) {
+                $tmpData = (string)file_get_contents($tmpFileLink);
+                $svgImage = 'data:image/' . $imageExtension . ';base64,' . base64_encode($tmpData);
+            }
         }
         return $svgImage;
+    }
+
+    public function getSettings(): array
+    {
+        $settings = $this->configurationManager->getConfiguration(
+            ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
+            'photoswipe'
+        );
+        if (empty($settings)) {
+            $setup = $this->configurationManager->getConfiguration(
+                ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT
+            );
+            $settings = $setup['plugin']['tx_photoswipe']['settings']
+                ?? $setup['plugin.']['tx_photoswipe.']['settings.']
+                ?? [];
+        }
+        return array_merge([
+            'imageExtensions' => 'jpg,jpeg,png,bmp',
+            'svgWidth' => 10,
+        ], $settings ?? []);
     }
 
     /**
@@ -53,8 +85,21 @@ class ImageService64
     private function removeExif(string $in, string $out): void
     {
         $buffer_len = 4096;
-        $fd_in = fopen(urldecode($in), 'rb');
+        $inPath = urldecode($in);
+        if (!file_exists($inPath)) {
+            return;
+        }
+        $fd_in = fopen($inPath, 'rb');
         $fd_out = fopen($out, 'wb');
+        if ($fd_in === false || $fd_out === false) {
+            if ($fd_in) {
+                fclose($fd_in);
+            }
+            if ($fd_out) {
+                fclose($fd_out);
+            }
+            return;
+        }
         while (($buffer = fread($fd_in, $buffer_len))) {
             //  \xFF\xE1\xHH\xLLExif\x00\x00 - Exif
             //  \xFF\xE1\xHH\xLLhttp://      - XMP
@@ -71,15 +116,5 @@ class ImageService64
         }
         fclose($fd_out);
         fclose($fd_in);
-    }
-
-    protected function getImageService():SingletonInterface|ImageService|null
-    {
-        return GeneralUtility::makeInstance(ImageService::class);
-    }
-
-    protected function getFrontendConfigurationManager()
-    {
-        return GeneralUtility::makeInstance(FrontendConfigurationManager::class);
     }
 }

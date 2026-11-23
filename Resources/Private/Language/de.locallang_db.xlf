@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2020-12-01T12:00:00Z" product-name="photoswipe">
+		<header/>
+		<body>
+			<trans-unit id="tx_photoswipe.imagelazy64" xml:space="preserve">
+				<source>Lazy loading</source>
+				<target state="translated">Lazy Loading (verzögertes Laden)</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

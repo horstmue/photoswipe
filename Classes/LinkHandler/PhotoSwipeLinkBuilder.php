@@ -32,7 +32,7 @@ class PhotoSwipeLinkBuilder extends PageLinkBuilder
 
     private function buildContentLayer(LinkResultInterface $result, string $cUid): LinkResultInterface
     {
-        $html = trim(preg_replace('/\s+/', ' ', $GLOBALS['TSFE']->cObj->cObjGetSingle(
+        $html = trim(preg_replace('/\s+/', ' ', (string)$this->contentObjectRenderer->cObjGetSingle(
             'RECORDS',
             [
                 'tables' => 'tt_content',
